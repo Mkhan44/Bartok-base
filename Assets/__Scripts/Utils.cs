@@ -275,7 +275,22 @@ public class Utils : MonoBehaviour {
 		Vector3 res = Lerp( Bezier(u, vListL), Bezier(u, vListR), u );
 		return( res );
 	}
-	
+
+	static public Quaternion Bezier( float u, List<Quaternion> vList ) {
+		// If there is only one element in vList, return it
+		if (vList.Count == 1) {
+			return( vList[0] );
+		}
+		// Otherwise, create vListR, which is all but the 0th element of vList
+		// e.g. if vList = [0,1,2,3,4] then vListR = [1,2,3,4]
+		List<Quaternion> vListR =  vList.GetRange(1, vList.Count-1);
+		// And create vListL, which is all but the last element of vList
+		// e.g. if vList = [0,1,2,3,4] then vListL = [0,1,2,3]
+		List<Quaternion> vListL = vList.GetRange(0, vList.Count-1);
+		// The result is the Lerp of these two shorter Lists
+		Quaternion res = Quaternion.Lerp( Bezier(u, vListL), Bezier(u, vListR), u );
+		return( res );
+	}
 	// This version allows an Array or a series of Vector3s as input
 	static public Vector3 Bezier( float u, params Vector3[] vecs ) {
 		return( Bezier( u, new List<Vector3>(vecs) ) );
