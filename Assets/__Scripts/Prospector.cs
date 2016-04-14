@@ -22,7 +22,7 @@ public class Prospector : MonoBehaviour {
 	public Vector3 fsPosEnd = new Vector3(1.0f, 0.65f, 0);
 	public Deck deck;
 	public TextAsset deckXML;
-	public Layout layout;
+	public BartokLayout layout;
 	public TextAsset layoutXML;
 	public Vector3 layoutCenter;
 	public float xOffset = 3;
@@ -84,7 +84,7 @@ public class Prospector : MonoBehaviour {
 		// The ref keyword passes a reference to deck.cards, which allows
 		// deck.cards to be modified by Deck.Shuffle()
 
-		layout = GetComponent<Layout>(); // Get the Layout
+		layout = GetComponent<BartokLayout>(); // Get the Layout
 		layout.ReadLayout(layoutXML.text); // Pass LayoutXML to it
 
 		drawPile = ConvertListCardsToListCardProspectors( deck.cards );
@@ -122,7 +122,7 @@ public class Prospector : MonoBehaviour {
 		}
 		CardProspector cp;
 		// Follow the layout
-		foreach (SlotDef tSD in layout.slotDefs) {
+		foreach (SlotDef tSD in layout.SlotDefs) {
 			// ^ Iterate through all the SlotDefs in the layout.slotDefs as tSD
 			cp = Draw(); // Pull a card from the top (beginning) of the drawPile
 			cp.faceUp = tSD.faceUp; // Set its faceUp to the value in SlotDef

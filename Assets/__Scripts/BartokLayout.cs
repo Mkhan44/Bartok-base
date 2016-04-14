@@ -30,6 +30,8 @@ public class BartokLayout : MonoBehaviour {
 	public SlotDef discardPile;
 	public SlotDef target;
 
+
+
 	//This function is called to read in the LayoutXML.xml file.
 	public void ReadLayout(string xmlText) {
 		xmlr = new PT_XMLReader ();
@@ -40,25 +42,26 @@ public class BartokLayout : MonoBehaviour {
 		multiplier.x = float.Parse (xml ["multiplier"] [0].att ("x"));
 		multiplier.y = float.Parse (xml ["multiplier"] [0].att ("y"));
 
+
 		//Read in the slots.
 		SlotDef tSD;
 		//slotsX is used as a shortcut to all the <slot>
 		PT_XMLHashList slotX = xml ["slot"];
 
-		for(int i=0; i<slotsX.Count; i++) {
+		for(int i=0; i<slotX.Count; i++) {
 			tSD = new SlotDef(); //Create a new SlotDef instance.
-			if(slotsX[i].HasAtt("type")) {
+			if(slotX[i].HasAtt("type")) {
 			} else {
 				//If not, set its type to "slot"
 				tSD.type = "slot";
 			}
 			//Various attributes are parsed into numerical values.
-			tSD.x = float.Parse (slotsX[i].att("x"));
-			tSD.y = float.Parse (slotsX[i].att("y"));
+			tSD.x = float.Parse (slotX[i].att("x"));
+			tSD.y = float.Parse (slotX[i].att("y"));
 			tSD.pos = new Vector3(tSD.x*multiplier.x, tSD.y*multiplier.y, 0);
 
 			//Sorting Layers
-			tSD.layerID = int.Parse (slotsX[i].att("layer"));
+			tSD.layerID = int.Parse (slotX[i].att("layer"));
 			//In this game, the sorting layers are named 1, 2 ,3 ...through 10.
 			//This converts the number of the layerID into a text layerName.
 			tSD.layerName = tSD.layerID.ToString ();
@@ -73,7 +76,7 @@ public class BartokLayout : MonoBehaviour {
 
 			case "drawpile":
 				//The drawPile xstagger is read but not actually used in bartok.
-				tSD.stagger.x = float.Parse (slotsX[i].att("xstagger"));
+				tSD.stagger.x = float.Parse (slotX[i].att("xstagger"));
 				drawPile = tSD;
 				break;
 
@@ -88,9 +91,9 @@ public class BartokLayout : MonoBehaviour {
 
 			case "hand":
 				//Information for each player's hand 
-				tSD.player = int.Parse (slotsX[i].att("player"));
-				tSD.rot = float.Parse (slotsX[i].att("rot"));
-				slotDefs.Add(tSD);
+				tSD.player = int.Parse (slotX[i].att("player"));
+				tSD.rot = float.Parse (slotX[i].att("rot"));
+				SlotDefs.Add(tSD);
 				break;
 			}
 		}
@@ -103,5 +106,5 @@ public class BartokLayout : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 	
-	}
+	}	
 }
