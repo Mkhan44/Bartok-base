@@ -105,38 +105,43 @@ public class Player {
 
 		}
 
-		//The TakeTurn() function enables the AI of the computer players.
-		public void TakeTurn() {
-			Utils.try(Utils.RoundToPlaces(Time.Time), "Player.TakeTurn");
+	
 
-			if(type == PlayerType.human)return;
-			Bartok.S.phase = TurnPhase.waiting;
+	
+	}
 
-			CardBartok cb;
+	public void CBCallback(CardBartok tCB) {
+		Utils.tr (Utils.RoundToPlaces (Time.time), "Player.CBCallback()", tCB.name, "Player " + playerNum);
+		
+		Bartok.S.PassTurn ();
+	}
 
-			List<CardBartok> validCards = new List<CardBartok>();
-			foreach(CardBartok tCB in hand) {
+	//The TakeTurn() function enables the AI of the computer players.
+	public void TakeTurn() {
+		Utils.tr(Utils.RoundToPlaces(Time.time), "Player.TakeTurn");
+		
+		if(type == PlayerType.human)return;
+		Bartok.S.phase = TurnPhase.waiting;
+		
+		CardBartok cb;
+		
+		List<CardBartok> validCards = new List<CardBartok>();
+		foreach(CardBartok tCB in hand) {
 			if(Bartok.S.ValidPlay (tCB)) {
-					validCards.Add (tCB);
-				}
+				validCards.Add (tCB);
 			}
-			//If there are no valid cards.
-			if(validCards.Count == 0) {
-				cb = AddCard (Bartok.S.Draw ());
-				cb.callbackPlayer = this;
-				return;
-			}
-
-			cb = validCards[Random.Range (0, validCards.Count)];
-			RemoveCard (cb);
-			Bartok.S.MoveToTarget(cb);
-			cb.callbackPlayer = this;
 		}
-
-		public void CBCallback(CardBartok tCB) {
-			Utils.tr (Utils.RoundToPlaces (Time.time), "Player.CBCallback()", tCB.name, "Player " + playerNum);
-
-			Bartok.S.PassTurn ();
+		//If there are no valid cards.
+		if(validCards.Count == 0) {
+			cb = AddCard (Bartok.S.Draw ());
+			cb.callbackPlayer = this;
+			return;
+		}
+		
+		cb = validCards[Random.Range (0, validCards.Count)];
+		RemoveCard (cb);
+		Bartok.S.MoveToTarget(cb);
+		cb.callbackPlayer = this;
 		}
 	}
 
