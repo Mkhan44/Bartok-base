@@ -32,9 +32,17 @@ public class CardBartok : Card {
 	public List<Quaternion> bezierRots;
 	public float timeStart, timeDuration; //declares 2 fields.
 
+	public int eventualSortOrder;
+	public string eventualSortLayer;
+
 	//When the card is done moving, it will call reportFinishTo.SendMessage()
 	public GameObject reportFinishTo = null;
+	public Player callbackPlayer = null;
 
+
+	void Awake() {
+		callbackPlayer = null; //Just to be sure.
+	}
 	//MoveTo tells the card to inerpolate to a new position and rotation.
 	public void MoveTo(Vector3 ePos, Quaternion eRot) {
 	//Make new interpolation lists for the card.
@@ -106,7 +114,12 @@ public class CardBartok : Card {
 					//to null so that if the card doesn't continue to report
 					//to the same GameObject every subsequent time it moves.
 					reportFinishTo = null;
-				} else { //If there is nothing to callback
+				} else if (callbackPlayer !=null) { 
+				
+					callbackPlayer.CBCallback (this);
+					callbackPlayer = null;
+				}
+				 else { //If there is nothing to callback
 					//Do nothing
 				}
 			} else { //0<=u<1 , which means that this is inerpolating now
@@ -115,11 +128,24 @@ public class CardBartok : Card {
 				transform.localPosition = pos;
 				Quaternion rotQ = Utils.Bezier (uC, bezierRots);
 				transform.rotation = rotQ;
+
+				if (u>0.5f && spriteRenderers[0].sortingOrder != eventualSortOrder) {
+				//Jump to the proper sort order
+					SetSortOrder(eventualSortOrder);
+				}
+				if(u>0.75f && spriteRenderers[0].sortingLayerName!= eventualSortLayer) {
+					SetSortingLayerName (eventualSortLayer);
+				}
 			}
 			break;
 				}
+
+	override public void OnMouseUpAsButton() {
+		Bartok.S.CardClicked (this);
+		base.OnMouseUpAsButton ();
+	}
 			}
-		}
+		
 		
 	
 
